@@ -2,14 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 int main(int argc, char const *argv[])
 {
+
 	if(argc == 1){
 		
 		// The user enter the filename so we can store in the memory.
 		//char filename[256];
 		char* filename = malloc(256*sizeof(char));
-		puts("Please enter a filename");
+		printf("Enter the file: ");
 		scanf("%s",filename);
 		int counter=0;
 		
@@ -43,8 +45,8 @@ int main(int argc, char const *argv[])
 	}
 	else if(argc == 2 && (strcmp("--help",argv[1]) == 0)){
 		printf("Functions and Commands:\n");
-		printf("----------------------------\n");
-		printf("--version\n -> This command lists the author of the program and the version number/date\n");
+		printf("----------------------------\n\n");
+		printf("--version\nThis command lists the author of the program and the version number/date\n");
 	}
 	else if(argc == 2){
 		// We can use the argv[1] to the name of the file
