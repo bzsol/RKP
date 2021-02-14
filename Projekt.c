@@ -5,16 +5,28 @@
 int main(int argc, char const *argv[])
 {
 	if(argc == 1){
+		
+		// The user enter the filename so we can store in the memory.
 		//char filename[256];
 		char* filename = (char*)malloc(256*sizeof(char));
 		puts("Please enter a filename");
 		scanf("%s",filename);
-		printf("You work on this file: ");
-		puts(filename);
-		char* file = malloc(strlen(filename) + 1);
-		strcpy(file,filename);
-		printf("This is the char* file: %s\n",file);
-		free(filename); // For the overflow
+		int counter=0;
+		
+		// Count how much char we need to store exactly
+		while(filename[counter] != '\0'){
+			counter++;
+		}
+		
+		// The budget know how much space need to store the exact char* so we care about how much memory we use
+		// At the moment
+		char* budget = malloc(counter*sizeof(char));
+		strcpy(budget,filename);
+		free(filename);
+		printf("%s\n%ld\n",budget,strlen(budget));
+
+		// Free the budget because don't really use for anything at the moment
+		free(budget);
 		
 	}
 	else if(argc == 2 && (strcmp("--version",argv[1])) == 0){
@@ -35,6 +47,7 @@ int main(int argc, char const *argv[])
 		printf("--version\n -> This command lists the author of the program and the version number/date\n");
 	}
 	else if(argc == 2){
+		// We can use the argv[1] to the name of the file
 		printf("%s\n",argv[1]);
 	}
 	return 0;
