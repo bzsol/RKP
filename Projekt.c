@@ -8,7 +8,7 @@ int main(int argc, char const *argv[])
 		
 		// The user enter the filename so we can store in the memory.
 		//char filename[256];
-		char* filename = (char*)malloc(256*sizeof(char));
+		char* filename = malloc(256*sizeof(char));
 		puts("Please enter a filename");
 		scanf("%s",filename);
 		int counter=0;
