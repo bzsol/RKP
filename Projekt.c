@@ -7,29 +7,23 @@ int main(int argc, char const *argv[])
 {
 
 	if(argc == 1){
-		
-		// The user enter the filename so we can store in the memory.
-		//char filename[256];
-		char* filename = malloc(256*sizeof(char));
-		printf("Enter the file: ");
-		scanf("%s",filename);
-		int counter=0;
-		
-		// Count how much char we need to store exactly
-		while(filename[counter] != '\0'){
-			counter++;
-		}
-		
-		// The budget know how much space need to store the exact char* so we care about how much memory we use
-		// At the moment
-		char* budget = malloc(counter*sizeof(char));
-		strcpy(budget,filename);
-		free(filename);
-		printf("%s\n%ld\n",budget,strlen(budget));
+	
+	//This is the buffer and allocated size of the string
+	char* filename = malloc(256*sizeof(char));
+	
+	// The input
+	printf("Please enter the filename: ");
+	scanf("%s",filename);
+	printf("\n");
+	
+	// We realloc the memory for the better because we don't need 256 char
+	filename = realloc(filename,sizeof(filename)/sizeof(filename[0]));
+	puts(filename);
 
-		// Free the budget because don't really use for anything at the moment
-		free(budget);
-		
+	
+	// Free the allocated memory
+	free(filename);
+
 	}
 	else if(argc == 2 && (strcmp("--version",argv[1])) == 0){
 		printf("########################\n");
