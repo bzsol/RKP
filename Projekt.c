@@ -18,8 +18,8 @@ int main(int argc, char const *argv[])
 	// We realloc the memory for the better because we don't need 256 char
 	filename = realloc(filename,sizeof(filename)/sizeof(filename[0]));
 	puts(filename);
-    printf("strlen: %d\n",strlen(filename));
-    printf("char* size: %d",sizeof(filename)/sizeof(filename[0]));
+        printf("strlen: %d\n",strlen(filename));
+        printf("char* size: %d",sizeof(filename)/sizeof(filename[0]));
 
 	// Free the allocated memory
 	free(filename);
