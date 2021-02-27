@@ -48,7 +48,7 @@ char *TestArray(int *NumCh)
             buff |= changer;
             pixel[i] = buff;
         }
-        else if((i == 1) || (i == 4) || (i == 7))
+        else if ((i == 1) || (i == 4) || (i == 7))
         {
             for (int j = 4; 0 <= j; j--)
             {
@@ -66,7 +66,8 @@ char *TestArray(int *NumCh)
             buff |= changer;
             pixel[i] = buff;
         }
-        else{
+        else
+        {
             for (int j = 4; 0 <= j; j--)
             {
                 int x = rand() % (1 - 0 + 1) + 0;
@@ -110,8 +111,8 @@ int main(int argc, char const *argv[])
     char2bit(pixel[1]);
     char2bit(pixel[2]);
 
-    printf("titkos len: %d\n",num);
-    printf("mem cim: %s\n",str);
+    printf("titkos len: %d\n", num);
+    printf("mem cim: %s\n", str);
     free(str);
     free(pixel);
     return 0;
