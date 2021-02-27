@@ -61,7 +61,8 @@ char *TestArray(int *NumCh)
             }
             buff <<= 3;
             changer |= word;
-            changer <<= 2;
+            changer >>= 3;
+            changer <<= 5;
             changer >>= 5;
             buff |= changer;
             pixel[i] = buff;
@@ -107,9 +108,18 @@ int main(int argc, char const *argv[])
     srand(time(NULL));
     int num;
     char *tarolo = TestArray(&num);
+    puts("a");
     char2bit(pixel[0]);
     char2bit(pixel[1]);
     char2bit(pixel[2]);
+    puts("b");
+    char2bit(pixel[3]);
+    char2bit(pixel[4]);
+    char2bit(pixel[5]);
+    puts("c");
+    char2bit(pixel[6]);
+    char2bit(pixel[7]);
+    char2bit(pixel[8]);
 
     printf("titkos len: %d\n", num);
     printf("mem cim: %s\n", str);
