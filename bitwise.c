@@ -3,8 +3,6 @@
 #include <time.h>
 #include <math.h>
 
-
-
 void char2bit(char val)
 {
     for (int i = 7; 0 <= i; i--)
@@ -14,7 +12,8 @@ void char2bit(char val)
     printf("\n");
 }
 
-char *TestArray(int *NumCh){
+char *TestArray(int *NumCh)
+{
     char *pixel;
     //char basicmask = 248; // 11111000
     //char firstmask = 252; // 11111100
@@ -24,13 +23,15 @@ char *TestArray(int *NumCh){
     char stangi = 7; // 00000111
     char word;
     const char alap[] = "abc";
-    *NumCh = sizeof(alap)/sizeof(alap[0])-1;
-    pixel = (char*)malloc(9*sizeof(char));
-    if(pixel == NULL){
+    *NumCh = sizeof(alap) / sizeof(alap[0]) - 1;
+    pixel = (char *)malloc(9 * sizeof(char));
+    if (pixel == NULL)
+    {
         perror("Hiba! A memoria lefoglalas soran\n");
         exit(1);
     }
-    for(int i=0;i<(*NumCh)*3;i++){
+    for (int i = 0; i < (*NumCh) * 3; i++)
+    {
         kenyer = 0;
         if (i < 3)
         {
@@ -44,10 +45,13 @@ char *TestArray(int *NumCh){
         {
             word = alap[2];
         }
-        if((i == 0) || (i%3==0)){
-            for(int j = 5;0<=j;j--){
+        if ((i == 0) || (i % 3 == 0))
+        {
+            for (int j = 5; 0 <= j; j--)
+            {
                 int x = rand() % (1 - 0 + 1) + 0;
-                if(x == 1){
+                if (x == 1)
+                {
                     kenyer ^= (1 << j);
                 }
             }
@@ -57,7 +61,8 @@ char *TestArray(int *NumCh){
             kenyer |= word;
             pixel[i] = kenyer;
         }
-        else if ((i == 1) || (i == 4) || (i == 7)){
+        else if ((i == 1) || (i == 4) || (i == 7))
+        {
             for (int j = 4; 0 <= j; j--)
             {
                 int x = rand() % (1 - 0 + 1) + 0;
@@ -72,7 +77,8 @@ char *TestArray(int *NumCh){
             kenyer |= word;
             pixel[i] = kenyer;
         }
-        else{
+        else
+        {
             for (int j = 4; 0 <= j; j--)
             {
                 int x = rand() % (1 - 0 + 1) + 0;
@@ -89,28 +95,32 @@ char *TestArray(int *NumCh){
     }
     return pixel;
 }
-char* Unwrap(char* Pbuff, int NumCh){
-    char* uzenet = (char*)malloc(NumCh*sizeof(char));
-    if(uzenet == NULL){
+char *Unwrap(char *Pbuff, int NumCh)
+{
+    char *uzenet = (char *)malloc(NumCh * sizeof(char));
+    if (uzenet == NULL)
+    {
         perror("Hiba! A memoria lefoglalas soran\n");
         exit(2);
     }
     char kenyer;
     int j = 0;
-    for(int i=0;i<NumCh*3;i++){
-        if((i == 0) || (i%3==0)){
+    for (int i = 0; i < NumCh * 3; i++)
+    {
+        if ((i == 0) || (i % 3 == 0))
+        {
             kenyer = Pbuff[i] << 6;
         }
-        else if ((i == 1) || (i == 4) || (i == 7)){
+        else if ((i == 1) || (i == 4) || (i == 7))
+        {
             kenyer |= ((Pbuff[i] << 3) & 56);
-
         }
-        else{
-            kenyer |= (Pbuff[i]&7);
+        else
+        {
+            kenyer |= (Pbuff[i] & 7);
             uzenet[j] = kenyer;
             j++;
         }
-
     }
     free(Pbuff);
     return uzenet;
@@ -120,8 +130,8 @@ int main()
 {
     srand(time(NULL));
     int len;
-    char* mem = TestArray(&len);
-    char* valasz = Unwrap(mem,len);
+    char *mem = TestArray(&len);
+    char *valasz = Unwrap(mem, len);
     puts(valasz);
     free(valasz);
     return 0;
