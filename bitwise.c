@@ -24,7 +24,7 @@ char *TestArray(int *NumCh)
     char word;
     const char alap[] = "abc";
     *NumCh = sizeof(alap) / sizeof(alap[0]) - 1;
-    pixel = (char *)malloc(9 * sizeof(char));
+    pixel = (char *)malloc((*NumCh*3) * sizeof(char));
     if (pixel == NULL)
     {
         perror("Hiba! A memoria lefoglalas soran\n");
