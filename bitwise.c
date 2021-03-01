@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
+#include <string.h>
 void char2bit(char val)
 {
     for (int i = 7; 0 <= i; i--)
@@ -12,12 +12,12 @@ void char2bit(char val)
 }
 char *TestArray(int *NumCh)
 {
-    const char alap[] = "abc";
+    const char alap[] = "megszentsegtelenithetetlensegeskedeseitekert";
     *NumCh = (sizeof(alap) / sizeof(char)) - 1;
     char *pixel = (char *)malloc(((*NumCh) * 3) * sizeof(char));
     if (pixel == NULL)
     {
-        perror("Memoria foglalas nem sikerult!\n");
+        perror("Hiba! A memoria lefoglalasakor\n");
         exit(1);
     }
     int counter = 0;
@@ -78,11 +78,17 @@ char *TestArray(int *NumCh)
 }
 char *Unwrap(char *Pbuff, int NumCh)
 {
+    char *fin = (char *)malloc(NumCh * sizeof(char));
     char *str = (char *)malloc(NumCh * sizeof(char));
-    if (str == NULL)
+    if (fin == NULL)
     {
-        perror("Memoria foglalas nem sikerult!\n");
-        exit(2);
+        perror("Hiba! A memoria lefoglalasakor\n");
+        exit(1);
+    }
+    else if (str == NULL)
+    {
+        perror("Hiba! A memoria lefoglalasakor\n");
+        exit(1);
     }
     int counter = 0;
     for (int i = 0; i < NumCh; i++)
@@ -127,8 +133,11 @@ char *Unwrap(char *Pbuff, int NumCh)
         }
     }
     */
+    // This will work in windows operating system too!
     free(Pbuff);
-    return str;
+    strcpy(fin, str);
+    free(str);
+    return fin;
 }
 int main()
 {
