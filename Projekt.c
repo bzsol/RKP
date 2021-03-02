@@ -143,17 +143,18 @@ int main(int argc, char const *argv[])
 		printf("#  Berecz Zsolt-GN6W3I #\n");
 		printf("########################\n");
 		printf("########################\n");
-		printf("#     Version: 1.0.0   #\n");
+		printf("#     Version: 1.1     #\n");
 		printf("########################\n");
 		printf("########################\n");
-		printf("#    Date: 11.02.2021  #\n");
+		printf("#    Date: 2.03.2021   #\n");
 		printf("########################\n");
 	}
 	else if (argc == 2 && (strcmp("--help", argv[1]) == 0))
 	{
 		printf("Functions and Commands:\n");
-		printf("----------------------------\n\n");
+		printf("----------------------------\n");
 		printf("--version\nThis command lists the author of the program and the version number/date\n");
+		printf("--testarray\n This command tests to write a string to bmp pixels and after that decodes that\n");
 	}
 	else if (argc == 2 && (strcmp("--testarray", argv[1]) == 0))
 	{
@@ -168,6 +169,9 @@ int main(int argc, char const *argv[])
 	{
 		// We can use the argv[1] to the name of the file
 		printf("%s\n", argv[1]);
+	}
+	else{
+		printf("Too many arguements!\nTry again!\n");
 	}
 	return 0;
 }
