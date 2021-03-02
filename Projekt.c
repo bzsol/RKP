@@ -3,6 +3,25 @@
 #include <string.h>
 #include <time.h>
 
+void char2bit(char val)
+{
+	for (int i = 7; 0 <= i; i--)
+	{
+		printf("%d", (val & (1 << i)) ? 1 : 0);
+	}
+	printf("\n");
+}
+void RandomPixel(char* random)
+{
+	for (int k = 0; k <= 7; k++)
+	{
+		int x = rand() % 2;
+		if (x == 1)
+		{
+			*random ^= (1 << k);
+		}
+	}
+}
 char *TestArray(int *NumCh)
 {
 	const char alap[] = "megszentsegtelenithetetlensegeskedeseitekert";
@@ -22,14 +41,7 @@ char *TestArray(int *NumCh)
 			char kenyer; // pixel[]?!
 			if (j == 0)
 			{
-				for (int k = 0; k <= 5; k++)
-				{
-					int x = rand() % 2;
-					if (x == 1)
-					{
-						random ^= (1 << k);
-					}
-				}
+				RandomPixel(&random);
 				random <<= 2;
 				kenyer = ((alap[i] >> 6) & 3) | random;
 				pixel[counter] = kenyer;
@@ -37,14 +49,7 @@ char *TestArray(int *NumCh)
 			}
 			else if (j == 1)
 			{
-				for (int k = 0; k <= 4; k++)
-				{
-					int x = rand() % 2;
-					if (x == 1)
-					{
-						random ^= (1 << k);
-					}
-				}
+				RandomPixel(&random);
 				random <<= 3;
 				kenyer = ((alap[i] >> 3) & 7) | random;
 				pixel[counter] = kenyer;
@@ -52,14 +57,7 @@ char *TestArray(int *NumCh)
 			}
 			else if (j == 2)
 			{
-				for (int k = 0; k <= 4; k++)
-				{
-					int x = rand() % 2;
-					if (x == 1)
-					{
-						random ^= (1 << k);
-					}
-				}
+				RandomPixel(&random);
 				random <<= 3;
 				kenyer = (alap[i] & 7) | random;
 				pixel[counter] = kenyer;
@@ -129,8 +127,8 @@ int main(int argc, char const *argv[])
 		scanf("%s", filename);
 
 		// Free the memory for the better because we don't need 256 char
-		char* budget = (char*)malloc(strlen(filename)*sizeof(char));
-		strcpy(budget,filename);
+		char *budget = (char *)malloc(strlen(filename) * sizeof(char));
+		strcpy(budget, filename);
 		free(filename);
 		puts(budget);
 
@@ -170,7 +168,8 @@ int main(int argc, char const *argv[])
 		// Can use the argv[1] to the name of the file
 		printf("%s\n", argv[1]);
 	}
-	else{
+	else
+	{
 		printf("Too many arguements!\nTry again!\n");
 	}
 	return 0;
