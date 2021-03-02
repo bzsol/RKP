@@ -128,14 +128,14 @@ int main(int argc, char const *argv[])
 		printf("Please enter the filename: ");
 		scanf("%s", filename);
 
-		// We realloc the memory for the better because we don't need 256 char
-		filename = realloc(filename, sizeof(filename) / sizeof(filename[0]));
-		puts(filename);
-		printf("strlen: %d\n", strlen(filename));
-		printf("char* size: %d", sizeof(filename) / sizeof(filename[0]));
+		// Free the memory for the better because we don't need 256 char
+		char* budget = (char*)malloc(strlen(filename)*sizeof(char));
+		strcpy(budget,filename);
+		free(filename);
+		puts(budget);
 
 		// Free the allocated memory
-		free(filename);
+		free(budget);
 	}
 	else if (argc == 2 && (strcmp("--version", argv[1])) == 0)
 	{
@@ -167,7 +167,7 @@ int main(int argc, char const *argv[])
 	}
 	else if (argc == 2)
 	{
-		// We can use the argv[1] to the name of the file
+		// Can use the argv[1] to the name of the file
 		printf("%s\n", argv[1]);
 	}
 	else{
