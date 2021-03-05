@@ -39,7 +39,7 @@ char *ReadPixels(int f, int *NumCh)
 	unsigned long zsemle = 0;
 	char *p = (char *)malloc(4 * sizeof(char));
 	char *q = (char *)malloc(4 * sizeof(char));
-	char *bm = (char *)malloc(2 * sizeof(char));
+	char *bm = (char *)calloc(2,sizeof(char));
 	read(f, bm, 2);
 	if (strcmp(bm, "BM") != 0)
 	{
@@ -159,14 +159,8 @@ char *TestArray(int *NumCh)
 }
 char *Unwrap(char *Pbuff, int NumCh)
 {
-	char *fin = (char *)malloc(NumCh * sizeof(char));
-	char *str = (char *)malloc(NumCh * sizeof(char));
-	if (fin == NULL)
-	{
-		perror("Hiba! A memoria lefoglalasakor\n");
-		exit(1);
-	}
-	else if (str == NULL)
+	char *str = (char *)calloc(NumCh,sizeof(char));
+	if (str == NULL)
 	{
 		perror("Hiba! A memoria lefoglalasakor\n");
 		exit(1);
@@ -198,9 +192,7 @@ char *Unwrap(char *Pbuff, int NumCh)
 	}
 	// This will work in windows operating system too!
 	free(Pbuff);
-	strcpy(fin, str);
-	free(str);
-	return fin;
+	return str;
 }
 
 int main(int argc, char const *argv[])
