@@ -137,7 +137,7 @@ char *ReadPixels(int f, int *NumCh)
     }
     lseek(f, zsemle, SEEK_SET);
     read(f, pixel, kenyer * 3);
-    *NumCh = kenyer;
+    *NumCh = (int)kenyer;
     free(q);
     free(p);
     return pixel;
