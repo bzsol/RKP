@@ -236,7 +236,7 @@ int main(int argc, char const *argv[])
 		printf("#  Berecz Zsolt-GN6W3I #\n");
 		printf("########################\n");
 		printf("########################\n");
-		printf("#     Version: 1.1     #\n");
+		printf("#     Version: 1.2     #\n");
 		printf("########################\n");
 		printf("########################\n");
 		printf("#    Date: 2.03.2021   #\n");
