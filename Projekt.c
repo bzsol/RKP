@@ -231,7 +231,7 @@ int main(int argc, char const *argv[])
 		printf("#     Version: 1.2     #\n");
 		printf("########################\n");
 		printf("########################\n");
-		printf("#    Date: 2.03.2021   #\n");
+		printf("#    Date: 05.03.2021  #\n");
 		printf("########################\n");
 	}
 	else if (argc == 2 && (strcmp("--help", argv[1]) == 0))
