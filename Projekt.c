@@ -110,7 +110,7 @@ char *ReadPixels(int f, int *NumCh)
 	*NumCh = (int)kenyer;
 	free(q);
 	free(p);
-	close(fd);
+	close(f);
 	return pixel;
 }
 char *TestArray(int *NumCh)
