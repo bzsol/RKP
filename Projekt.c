@@ -39,7 +39,7 @@ char *ReadPixels(int f, int *NumCh)
 	unsigned long zsemle = 0;
 	char *p = (char *)malloc(4 * sizeof(char));
 	char *q = (char *)malloc(4 * sizeof(char));
-	char *bm = (char *)calloc(2,sizeof(char));
+	char *bm = (char *)calloc(2, sizeof(char));
 	read(f, bm, 2);
 	if (strcmp(bm, "BM") != 0)
 	{
@@ -110,6 +110,7 @@ char *ReadPixels(int f, int *NumCh)
 	*NumCh = (int)kenyer;
 	free(q);
 	free(p);
+	close(fd);
 	return pixel;
 }
 char *TestArray(int *NumCh)
@@ -159,7 +160,7 @@ char *TestArray(int *NumCh)
 }
 char *Unwrap(char *Pbuff, int NumCh)
 {
-	char *str = (char *)calloc(NumCh,sizeof(char));
+	char *str = (char *)calloc(NumCh, sizeof(char));
 	if (str == NULL)
 	{
 		perror("Hiba! A memoria lefoglalasakor\n");
