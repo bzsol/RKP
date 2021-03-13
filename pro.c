@@ -5,6 +5,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <time.h>
+#include <sys/types.h>
+#include <dirent.h>
+#include <unistd.h>
 #define GRN "\x1B[32m"
 #define RED "\x1B[31m"
 #define RST "\x1B[0m"
@@ -133,17 +136,71 @@ char *ReadPixels(int f, int *NumCh)
     close(f);
     return pixel;
 }
+int BrowseForOpen(){
+    int f;
+    DIR* dir;
+    struct dirent *dp;
+    chdir(getenv("HOME"));
+    struct stat inode;
+    char* filename = (char *)malloc(FILENAME_MAX* sizeof(char));
+    char* path = (char *)malloc(PATH_MAX * sizeof(char));
+    char* input = (char *)malloc(FILENAME_MAX * sizeof(char));
+    while(1){
+        dir = opendir(".");
+    while ((dp = readdir(dir)) != NULL)
+        {
+            strcpy(filename, dp->d_name);
+            if (dp->d_type == DT_DIR)
+            {
+                printf("\033[0;34m");
+                printf("Directory: ");
+                printf("\033[0m");
+            }
+            else if (dp->d_type == DT_REG)
+            {
+                printf("\033[0;32m");
+                printf("File: ");
+                printf("\033[0m");
+            }
+            printf(" %s\n", filename);
+        }
+        closedir(dir);
+        printf("The current directory: \x1B[36m %s\n"RST,getcwd(path,FILENAME_MAX));
+        do{
+        printf(">> ");
+        scanf("%s",input);
+        }while(stat(input,&inode) != 0);
+        printf("\n");
+        if(inode.st_mode & S_IFDIR){
+            chdir(input);
+        }
+        else if(inode.st_mode & S_IFREG){
+            f = open(input,O_RDONLY);
+            break;
+        }
+        system("clear");
+    }
+    free(filename);
+    free(path);
+    free(input);
+    return f;
+}
 int main(int argc, char const *argv[])
 {
     if (argc == 1)
     {
-        puts("File browser!");
+        int len;
+        int f = BrowseForOpen();
+        char *valasz = ReadPixels(f, &len);
+        char *eredmeny = Unwrap(valasz, len);
+        printf("%s\n", eredmeny);
+        free(eredmeny);
     }
     else if (argc == 2 && (strcmp("--version", argv[1])) == 0)
     {
         printf(RED "▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇\n" RST);
         printf("▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇\n");
-        printf(GRN "▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇\n\n\n" RST);
+        printf(GRN "▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇\n\n" RST);
         printf("1000%% magyar");
         printf(RED " <3 \n" RST);
         puts("The creator is Zsolt Berecz");
