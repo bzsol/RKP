@@ -73,7 +73,7 @@ char *ReadPixels(int f, int *NumCh)
     unsigned long zsemle = 0;
     char *p = (char *)malloc(4 * sizeof(char));
     char *q = (char *)malloc(4 * sizeof(char));
-    char *bm = (char *)malloc(2 * sizeof(char));
+    char *bm = (char *)calloc(2,sizeof(char));
     read(f, bm, 2);
     if (strcmp(bm, "BM") != 0)
     {
@@ -137,7 +137,7 @@ char *ReadPixels(int f, int *NumCh)
     }
     lseek(f, zsemle, SEEK_SET);
     read(f, pixel, kenyer * 3);
-    *NumCh = kenyer;
+    *NumCh = (int)kenyer;
     free(q);
     free(p);
     return pixel;

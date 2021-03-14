@@ -67,7 +67,7 @@ char *TestArray(int *NumCh)
 }
 char *Unwrap(char *Pbuff, int NumCh)
 {
-    char *str = (char *)calloc(NumCh,sizeof(char));
+    char *str = (char *)calloc(NumCh, sizeof(char));
     if (str == NULL)
     {
         perror("The memory allocation is failed!\n");
@@ -101,9 +101,11 @@ char *Unwrap(char *Pbuff, int NumCh)
 }
 char *ReadPixels(int f, int *NumCh)
 {
+    unsigned long kenyer = 0;
+    unsigned long zsemle = 0;
+    char *p = (char *)malloc(4 * sizeof(char));
+    char *q = (char *)malloc(4 * sizeof(char));
     char *bm = (char *)calloc(2, sizeof(char));
-    unsigned int len;
-    unsigned int zsemle;
     read(f, bm, 2);
     if (strcmp(bm, "BM") != 0)
     {
@@ -113,23 +115,67 @@ char *ReadPixels(int f, int *NumCh)
     }
     else if (bm == NULL)
     {
-        perror("The memory allocation is failed!\n");
+        perror("The memory allocation failed!");
+        exit(1);
+    }
+    else if (p == NULL)
+    {
+        perror("The memory allocation failed!");
+        exit(1);
+    }
+    else if (q == NULL)
+    {
+        perror("The memory allocation failed!");
         exit(1);
     }
     free(bm);
     lseek(f, 6, SEEK_SET); // 6. byte-tól megyünk
-    read(f, &len, 4);
+    read(f, p, 4);
     lseek(f, 10, SEEK_SET); // 10. byte-tól
-    read(f, &zsemle, 4);
-    char *pixel = (char *)malloc((len * 3) * sizeof(char));
+    read(f, q, 4);
+    char array[4];
+    char offset[4];
+    for (int i = 3; i >= 0; i--)
+    {
+        array[i] = p[3 - i];
+        offset[i] = q[3 - i];
+    }
+    for (int i = 0; i < 4; i++)
+    {
+        if (i == 0)
+        {
+            zsemle |= offset[i];
+            zsemle <<= 24;
+            kenyer |= array[i];
+            kenyer <<= 24;
+        }
+        if (i == 1)
+        {
+            zsemle |= (offset[i] << 16) & 16711680;
+            kenyer |= (array[i] << 16) & 16711680;
+        }
+        else if (i == 2)
+        {
+            zsemle |= (offset[i] << 8) & 65280;
+            kenyer |= (array[i] << 8) & 65280;
+        }
+        else if (i == 3)
+        {
+            zsemle |= (offset[i] & 255);
+            kenyer |= (array[i] & 255);
+        }
+    }
+    char *pixel = (char *)malloc((kenyer * 3) * sizeof(char));
     if (pixel == NULL)
     {
-        perror("The memory allocation is failed!");
+        perror("The memory allocation failed!");
         exit(1);
     }
     lseek(f, zsemle, SEEK_SET);
-    read(f, pixel, len * 3);
-    *NumCh = len;
+    read(f, pixel, kenyer * 3);
+    *NumCh = (int)kenyer;
+    free(q);
+    free(p);
     close(f);
     return pixel;
 }
@@ -244,7 +290,7 @@ int main(int argc, char const *argv[])
         int len;
         char *mem = TestArray(&len);
         char *valasz = Unwrap(mem, len);
-        puts(valasz);
+        printf("%s\n", valasz);
         free(valasz);
     }
     else if (argc == 2)
