@@ -8,10 +8,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <unistd.h>
-#define GRN "\x1B[32m"
-#define RED "\x1B[31m"
-#define RST "\x1B[0m"
-#define BLU "\x1B[34m"
+
 
 void RandomPixel(char *random)
 {
@@ -136,46 +133,52 @@ char *ReadPixels(int f, int *NumCh)
     close(f);
     return pixel;
 }
-int BrowseForOpen(){
+int BrowseForOpen()
+{
     int f;
-    DIR* dir;
+    DIR *dir;
     struct dirent *dp;
     chdir(getenv("HOME"));
     struct stat inode;
-    char* filename = (char *)malloc(FILENAME_MAX* sizeof(char));
-    char* path = (char *)malloc(PATH_MAX * sizeof(char));
-    char* input = (char *)malloc(FILENAME_MAX * sizeof(char));
-    while(1){
+    char *filename = (char *)malloc(FILENAME_MAX * sizeof(char));
+    char *path = (char *)malloc(PATH_MAX * sizeof(char));
+    char *input = (char *)malloc(FILENAME_MAX * sizeof(char));
+    while (1)
+    {
         dir = opendir(".");
-    while ((dp = readdir(dir)) != NULL)
+        while ((dp = readdir(dir)) != NULL)
         {
             strcpy(filename, dp->d_name);
             if (dp->d_type == DT_DIR)
             {
-                printf("\033[0;34m");
+                printf("\033[1;34m");
                 printf("Directory: ");
                 printf("\033[0m");
             }
             else if (dp->d_type == DT_REG)
             {
-                printf("\033[0;32m");
+                printf("\033[1;32m");
                 printf("File: ");
                 printf("\033[0m");
             }
-            printf(" %s\n", filename);
+            printf(" %s \n", filename);
         }
         closedir(dir);
-        printf("The current directory: \x1B[36m %s\n"RST,getcwd(path,FILENAME_MAX));
-        do{
-        printf(">> ");
-        scanf("%s",input);
-        }while(stat(input,&inode) != 0);
+        printf("The current directory: \033[1;36m %s\n", getcwd(path, FILENAME_MAX));
+        printf("\033[0m");
+        do
+        {
+            printf(">> ");
+            scanf("%s", input);
+        } while (stat(input, &inode) != 0);
         printf("\n");
-        if(inode.st_mode & S_IFDIR){
+        if (inode.st_mode & S_IFDIR)
+        {
             chdir(input);
         }
-        else if(inode.st_mode & S_IFREG){
-            f = open(input,O_RDONLY);
+        else if (inode.st_mode & S_IFREG)
+        {
+            f = open(input, O_RDONLY);
             break;
         }
         system("clear");
@@ -198,23 +201,41 @@ int main(int argc, char const *argv[])
     }
     else if (argc == 2 && (strcmp("--version", argv[1])) == 0)
     {
-        printf(RED "▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇\n" RST);
-        printf("▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇\n");
-        printf(GRN "▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇\n\n" RST);
-        printf("1000%% magyar");
-        printf(RED " <3 \n" RST);
-        puts("The creator is Zsolt Berecz");
-        puts("2021.03.12");
+        puts("The creator:   \033[1;34m Zsolt Berecz");
+        printf("\033[0m");
+        printf("Last update:\t");
+        printf("\033[1;37m");
+        puts("2021.03.14");
+        printf("\033[0m");
+        printf("Github link:\t");
+        printf("\033[1;36m");
+        puts("https://github.com/bzsol/Cproj/");
+        printf("\033[0m");
+        puts("");
+        /*printf("\033[1;31m");
+        printf("▇▇▇▇▇▇▇▇▇▇▇▇\n");
+        printf("\033[1;37m");
+        printf("▇▇▇▇▇▇▇▇▇▇▇▇\n");
+        printf("\033[1;32m");
+        printf("▇▇▇▇▇▇▇▇▇▇▇▇\n\n");
+        printf("\033[0m");
+        */
     }
     else if (argc == 2 && (strcmp("--help", argv[1]) == 0))
     {
         printf("Functions and Commands:\n");
         printf("----------------------------\n");
-        printf(GRN "--version\n" RST);
-        printf("This command lists the author of the program and the version number/date. (Hungarian flag included because why not)\n");
-        printf(GRN "--testarray\n" RST);
+        printf("\033[1;32m");
+        printf("--version\n");
+        printf("\033[0m");
+        printf("This command lists the author of the program and the version number/date.\n");
+        printf("\033[1;32m");
+        printf("--testarray\n");
+        printf("\033[0m");
         printf("This command show one of the marvelous Hungarian words you can find in your grammar book.\n");
-        printf(GRN "./program xxxx.bmp\n" RST);
+        printf("\033[1;32m");
+        printf("./program xxxx.bmp\n");
+        printf("\033[0m");
         printf("You will be able to decrypt the professor secret message.\n");
     }
     else if (argc == 2 && (strcmp("--testarray", argv[1]) == 0))
