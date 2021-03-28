@@ -8,7 +8,12 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <unistd.h>
-
+#include <sys/socket.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#define TCP 80
+#define BUFFSIZE 1024
 
 void RandomPixel(char *random)
 {
@@ -67,7 +72,7 @@ char *TestArray(int *NumCh)
 }
 char *Unwrap(char *Pbuff, int NumCh)
 {
-    char *str = (char *)calloc(NumCh,sizeof(char));
+    char *str = (char *)calloc(NumCh, sizeof(char));
     if (str == NULL)
     {
         perror("The memory allocation is failed!\n");
@@ -102,8 +107,8 @@ char *Unwrap(char *Pbuff, int NumCh)
 char *ReadPixels(int f, int *NumCh)
 {
     char *bm = (char *)calloc(2, sizeof(char));
-    unsigned int len;
-    unsigned int zsemle;
+    unsigned int len;    // Mekkora hossz
+    unsigned int zsemle; // Honnan
     read(f, bm, 2);
     if (strcmp(bm, "BM") != 0)
     {
@@ -121,7 +126,7 @@ char *ReadPixels(int f, int *NumCh)
     read(f, &len, 4);
     lseek(f, 10, SEEK_SET); // 10. byte-tól
     read(f, &zsemle, 4);
-    char *pixel = (char *)malloc((len * 3) * sizeof(char));
+    char *pixel = (char *)malloc((len * 3) * sizeof(char)); // R G B
     if (pixel == NULL)
     {
         perror("The memory allocation is failed!");
@@ -186,8 +191,60 @@ int BrowseForOpen()
     free(filename);
     free(path);
     free(input);
+    system("clear");
     return f;
 }
+
+int Post(char *neptunID, char *message, int NumCh)
+{
+    int sock;
+    int con;
+    int sent;
+    int rec;
+    char IP[] = "193.6.135.162";
+    struct sockaddr_in address;
+    struct hostent *hostinfo;
+    char *buffer = malloc(BUFFSIZE * sizeof(char)); // 1kB adat
+    char *received;
+    hostinfo = gethostbyname(IP);
+    if (hostinfo == NULL)
+    {
+        perror("Error! The host is not found!");
+    }
+    sprintf(buffer, "POST /~vargai/post.php HTTP/1.1\r\nHost: irh.inf.unideb.hu\r\nContent-Length: %d\r\nContent-Type: application/x-www-form-urlencoded\r\n\r\nNeptunID=%s&PostedText=%s", NumCh + 6 + 9 + 12, neptunID, message);
+    sock = socket(AF_INET, SOCK_STREAM, 0);
+    if (sock < 0)
+    {
+        perror("Error! Opening the socket is failed!");
+    }
+    address.sin_family = AF_INET;
+    address.sin_port = htons(TCP); // define 80 port 
+    address.sin_addr.s_addr = inet_addr(IP);
+    con = connect(sock, (struct sockaddr *)&address, sizeof(address));
+    if (con < 0)
+    {
+        perror("Connection with the server is not established!");
+    }
+    //write(sock, buffer, strlen(buffer));
+    sent = send(sock, buffer, strlen(buffer), 0);
+    if (sent <= 0)
+    {
+        perror("Error with sending the package");
+        exit(3);
+    }
+    rec = recv(sock,buffer,BUFFSIZE,0);
+    if(rec <= 0){
+        perror("Error with receiving the data!");
+        exit(4);
+    }
+    close(sock);
+    if(strstr(buffer,"The message has been received.") != NULL){
+        free(buffer);
+        return 0;
+    }
+    return 3;
+}
+
 int main(int argc, char const *argv[])
 {
     if (argc == 1)
@@ -196,7 +253,22 @@ int main(int argc, char const *argv[])
         int f = BrowseForOpen();
         char *valasz = ReadPixels(f, &len);
         char *eredmeny = Unwrap(valasz, len);
-        puts(eredmeny);
+        char *neptun = "GN6W3I";
+        int post = Post(neptun, eredmeny, len);
+        if(post == 0){
+            printf("\033[1;32m");
+            puts("");
+            puts("The text is sent successfully!");
+            puts("");
+            printf("\033[0m");
+        }
+        else{
+            printf("\033[1;31m");
+            puts("");
+            puts("The text is not delivered!");
+            puts("");
+            printf("\033[0m");
+        }
         free(eredmeny);
     }
     else if (argc == 2 && (strcmp("--version", argv[1])) == 0)
@@ -205,7 +277,7 @@ int main(int argc, char const *argv[])
         printf("\033[0m");
         printf("Last update:\t");
         printf("\033[1;37m");
-        puts("2021.03.14");
+        puts("2021.03.28");
         printf("\033[0m");
         printf("Github link:\t");
         printf("\033[1;36m");
@@ -255,7 +327,23 @@ int main(int argc, char const *argv[])
         int f = open(argv[1], O_RDONLY);
         char *valasz = ReadPixels(f, &len);
         char *eredmeny = Unwrap(valasz, len);
-        puts(eredmeny);
+        char *neptun = "GN6W3I";
+        int post = Post(neptun, eredmeny, len);
+        if(post == 0){
+            printf("\033[1;32m");
+            puts("");
+            puts("The text is sent successfully!");
+            puts("");
+            printf("\033[0m");
+        }
+        else{
+            printf("\033[1;31m");
+            puts("");
+            puts("The text is not delivered!");
+            puts("");
+            printf("\033[0m");
+        }
+        //puts(eredmeny);
         free(eredmeny);
     }
     else
