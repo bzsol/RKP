@@ -1,6 +1,6 @@
 # RKP Projekt - Rendszerközeli programozás projekt feladat
 
-######Készítette: Berecz Zsolt - GN6W3I
+**Készítette: Berecz Zsolt - GN6W3I**
 
 ####Feladat leírása:
 
@@ -36,14 +36,14 @@ Ezt követően egy file böngészőt láthatunk:
 
 ![](filebrowser.png)
 
-#####Fájl keresése a file böngésző segítségével:
+###Fájl keresése a file böngésző segítségével:
 
 A file böngésző nagyon hatékonyan dolgozik mivel akár csak a mappa vagy a fájl neve elég hogy keresni tudjunk a mappánkban vagy az adott .bmp fájlt megnyitni.
 Ha direkt elérési útvonalat szeretnénk bátran használható ez az opció is.
 
 **Ha vissza szeretnénk navigálni az előző mappára `/../` vagy `.. ` segítségével tudunk!**
 
-#####File megnyitása parancssori argumentumként
+###File megnyitása parancssori argumentumként
 
 Ha ezt az opciót szeretnénk használni egyszerűen mellé írjuk a program futtatása előtt a file nevét:
 `$ ./program cpu.bmp`
