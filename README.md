@@ -6,7 +6,7 @@
 
 > Hozzunk létre egy olyan Linux alatt futó programot ami egy TrueColor bmp fájlban beágyazott szöveget kicsomagol és elküld egy HTTP POST segítségével egy megadott webszerverre.
 
-####Használandó fordító programok és kapcsolók:
+#### Használandó fordító programok és kapcsolók:
 
 A program C nyelven íródott ezért szükséges egy C fordító ez esetben a GNU Compiler Collection-t ajánlott használni.
 Linux operációs rendszer esetén a telepítés terminál segítségével:
