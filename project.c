@@ -62,7 +62,7 @@ char *ReadPixels(int f, int *NumCh)
     {
         perror("This is not a valid BMP file!");
         free(bm);
-        exit(3);
+        exit(2);
     }
     else if (bm == NULL)
     {
@@ -161,14 +161,14 @@ int Post(char *neptunID, char *message, int NumCh)
     if (hostinfo == NULL)
     {
         perror("Error! The host is not found!");
-        exit(2);
+        exit(3);
     }
     sprintf(buffer, "POST /~vargai/post.php HTTP/1.1\r\nHost: irh.inf.unideb.hu\r\nContent-Length: %d\r\nContent-Type: application/x-www-form-urlencoded\r\n\r\nNeptunID=%s&PostedText=%s", NumCh + 6 + 9 + 12, neptunID, message);
     sock = socket(AF_INET, SOCK_STREAM, 0); // -> Make the socket
     if (sock < 0)
     {
-        perror("Error! Opening the socket is failed!");
-        exit(3);
+        perror("Error! Creating the socket is failed!");
+        exit(4);
     }
     address.sin_family = AF_INET;  // Ipv4
     address.sin_port = htons(TCP); // define 80 port
@@ -177,20 +177,20 @@ int Post(char *neptunID, char *message, int NumCh)
     if (con < 0)
     {
         perror("Connection with the server is not established!");
-        exit(7);
+        exit(5);
     }
     //write(sock, buffer, strlen(buffer)); -> küld a szerverre
     sent = send(sock, buffer, strlen(buffer), 0); // -> send() is ugyanaz
     if (sent <= 0)
     {
         perror("Error with sending the package");
-        exit(4);
+        exit(6);
     }
     rec = recv(sock, buffer, BUFFSIZE, 0);
     if (rec <= 0)
     {
         perror("Error with receiving the data!");
-        exit(5);
+        exit(7);
     }
     close(sock);
     if (strstr(buffer, "The message has been received.") != NULL)
@@ -199,7 +199,7 @@ int Post(char *neptunID, char *message, int NumCh)
         return 0;
     }
     free(buffer);
-    return 6;
+    return 8;
 }
 
 int main(int argc, char const *argv[])
