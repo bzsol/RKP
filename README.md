@@ -1,8 +1,8 @@
 # RKP Projekt - Rendszerközeli programozás projekt feladat
 
-**Készítette: Berecz Zsolt - GN6W3I**
+###### Készítette: Berecz Zsolt - GN6W3I
 
-####Feladat leírása:
+#### Feladat leírása:
 
 > Hozzunk létre egy olyan Linux alatt futó programot ami egy TrueColor bmp fájlban beágyazott szöveget kicsomagol és elküld egy HTTP POST segítségével egy megadott webszerverre.
 
@@ -21,7 +21,7 @@ Linux operációs rendszer esetén a telepítés terminál segítségével:
 **CentOS/RedHat**:
 `$ sudo yum group install "Development Tools"`
 
-###Felhasználói útmutatás:
+### Felhasználói útmutatás:
 
 A program futtatása terminál segítségével történik ha még nem fordítottuk le a programot akkor szükséges ez esetben, ha a **program.c**-ben lévő mappában vagyunk terminál segítségével le tudjuk fordítani:
 
@@ -43,12 +43,12 @@ Ha direkt elérési útvonalat szeretnénk bátran használható ez az opció is
 
 **Ha vissza szeretnénk navigálni az előző mappára `/../` vagy `.. ` segítségével tudunk!**
 
-###File megnyitása parancssori argumentumként
+### File megnyitása parancssori argumentumként
 
 Ha ezt az opciót szeretnénk használni egyszerűen mellé írjuk a program futtatása előtt a file nevét:
 `$ ./program cpu.bmp`
 
-###Program által visszaadott hibakódok:
+### Program által visszaadott hibakódok:
 
 - **Hibakód: 0**: Ez esetben a program tökéletesen lefutott és egy zöld szöveg segítségével tájékoztat hogy sikeresen megtörtént a kapcsolat a szerverrel és a képből a kód hibátlanul ki lett kódolva.
   
