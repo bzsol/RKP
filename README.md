@@ -41,7 +41,7 @@ Ezt követően egy file böngészőt láthatunk:
 A file böngésző nagyon hatékonyan dolgozik mivel akár csak a mappa vagy a fájl neve elég hogy keresni tudjunk a mappánkban vagy az adott .bmp fájlt megnyitni.
 Ha direkt elérési útvonalat szeretnénk bátran használható ez az opció is.
 
-**Ha vissza szeretnénk navigálni az előző mappára `/../` vagy `.. ` segítségével tudunk!**
+**Ha vissza szeretnénk navigálni az előző mappára `/../` vagy  `..` segítségével tudunk!**
 
 ### File megnyitása parancssori argumentumként
 
