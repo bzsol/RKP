@@ -46,6 +46,7 @@ Ha direkt elérési útvonalat szeretnénk bátran használható ez az opció is
 ### File megnyitása parancssori argumentumként
 
 Ha ezt az opciót szeretnénk használni egyszerűen mellé írjuk a program futtatása előtt a file nevét:
+<br>
 `$ ./program cpu.bmp`
 
 ### Program által visszaadott hibakódok:
