@@ -13,13 +13,13 @@ Linux operációs rendszer esetén a telepítés terminál segítségével:
 
 **Debian:**
 `$ sudo apt-get update`
-`$ sudo apt-get install build-essential`
+`$ sudo apt-get install gcc`
 
 **Arch:**
 `$ sudo pacman -S gcc`
 
 **CentOS/RedHat**:
-`$ sudo yum group install "Development Tools"`
+`$ sudo yum install gcc`
 
 ### Felhasználói útmutatás:
 
