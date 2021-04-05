@@ -12,8 +12,10 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
+#include <omp.h>
 #define TCP 80
 #define BUFFSIZE 1024
+
 
 void mallocFail()
 {
@@ -28,27 +30,33 @@ char *Unwrap(char *Pbuff, int NumCh)
     {
         mallocFail();
     }
-    int counter = 0;
-    for (int i = 0; i < NumCh; i++)
+    int i = 0;
+    int j = 0;
+    char buffer;
+    #pragma omp parallel shared(str) private(buffer,i,j)
     {
-        char buffer;
-        for (int j = 0; j < 3; j++)
+        //printf("I am the thread No%d.\n",omp_get_thread_num());
+    #pragma omp for schedule(guided)
+    for (i = 0; i < NumCh; i++)
+    {
+        buffer = 0;
+        for (j = 0; j < 3; j++)
         {
             if (j == 0)
             {
-                buffer = Pbuff[counter] << 6;
+                buffer = Pbuff[i*3+j] << 6;
             }
             else if (j == 1)
             {
-                buffer |= ((Pbuff[counter] << 3) & 0x38);
+                buffer |= ((Pbuff[i*3+j] << 3) & 0x38);
             }
             else if (j == 2)
             {
-                buffer |= (Pbuff[counter] & 7);
+                buffer |= (Pbuff[i*3+j] & 7);
             }
-            counter++;
         }
         str[i] = buffer;
+    }
     }
     free(Pbuff);
     return str;
@@ -210,6 +218,7 @@ int main(int argc, char const *argv[])
         int f = BrowseForOpen();
         char *valasz = ReadPixels(f, &len);
         char *eredmeny = Unwrap(valasz, len);
+        //puts(eredmeny);
         int post = Post("GN6W3I", eredmeny, len);
         if (post == 0)
         {
@@ -227,6 +236,7 @@ int main(int argc, char const *argv[])
             puts("");
             printf("\033[0m");
         }
+        
         free(eredmeny);
     }
     else if (argc == 2 && (strcmp("--version", argv[1])) == 0)
@@ -264,6 +274,7 @@ int main(int argc, char const *argv[])
         int f = open(argv[1], O_RDONLY);
         char *valasz = ReadPixels(f, &len);
         char *eredmeny = Unwrap(valasz, len);
+        //puts(eredmeny);
         int post = Post("GN6W3I", eredmeny, len);
         if (post == 0)
         {
@@ -281,7 +292,7 @@ int main(int argc, char const *argv[])
             puts("");
             printf("\033[0m");
         }
-
+        
         free(eredmeny);
     }
     else
