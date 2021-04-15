@@ -13,14 +13,33 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <omp.h>
+#include <signal.h>
 #define TCP 80
 #define BUFFSIZE 1024
-
 
 void mallocFail()
 {
     perror("The memory allocation is failed!");
     exit(1);
+}
+
+void WhatToDo(int sig)
+{
+    if (sig == SIGINT)
+    {
+        pid_t pid = fork();
+        if (pid == 0)
+        {
+            puts("The CTRL+C has been disabled!");
+            kill(getpid(), SIGKILL);
+        }
+    }
+    else
+    {
+        // perror usage is not obligatory
+        fprintf(stderr, "The BMP file decoding has failed");
+        exit(9);
+    }
 }
 
 char *Unwrap(char *Pbuff, int NumCh)
@@ -33,10 +52,8 @@ char *Unwrap(char *Pbuff, int NumCh)
     int i = 0;
     int j = 0;
     char buffer;
-    #pragma omp parallel shared(str) private(buffer,i,j)
-    {
-        //printf("I am the thread No%d.\n",omp_get_thread_num());
-    #pragma omp for schedule(guided)
+// i*3+j az adott Pixel tömb méreténél haladva mivel a NumCh 3x kisebb
+#pragma omp parallel for private(buffer, i, j) shared(str)
     for (i = 0; i < NumCh; i++)
     {
         buffer = 0;
@@ -44,19 +61,18 @@ char *Unwrap(char *Pbuff, int NumCh)
         {
             if (j == 0)
             {
-                buffer = Pbuff[i*3+j] << 6;
+                buffer = Pbuff[i * 3 + j] << 6;
             }
             else if (j == 1)
             {
-                buffer |= ((Pbuff[i*3+j] << 3) & 0x38);
+                buffer |= ((Pbuff[i * 3 + j] << 3) & 56);
             }
             else if (j == 2)
             {
-                buffer |= (Pbuff[i*3+j] & 7);
+                buffer |= (Pbuff[i * 3 + j] & 7);
             }
         }
         str[i] = buffer;
-    }
     }
     free(Pbuff);
     return str;
@@ -217,8 +233,12 @@ int main(int argc, char const *argv[])
         int len;
         int f = BrowseForOpen();
         char *valasz = ReadPixels(f, &len);
+        signal(SIGALRM, WhatToDo);
+        signal(SIGINT, WhatToDo);
+        alarm(1);
         char *eredmeny = Unwrap(valasz, len);
-        //puts(eredmeny);
+        alarm(0);
+        puts(eredmeny);
         int post = Post("GN6W3I", eredmeny, len);
         if (post == 0)
         {
@@ -236,7 +256,7 @@ int main(int argc, char const *argv[])
             puts("");
             printf("\033[0m");
         }
-        
+
         free(eredmeny);
     }
     else if (argc == 2 && (strcmp("--version", argv[1])) == 0)
@@ -264,7 +284,7 @@ int main(int argc, char const *argv[])
         printf("\033[1;32m");
         printf("./program xxxx.bmp\n");
         printf("\033[0m");
-        printf("You will be able to decrypt the professor secret message and send it to the internet via HTTP protocol.\n");
+        printf("You will be able to decrypt the tutor secret message and send it to the internet via HTTP protocol.\n");
     }
     else if (argc == 2)
     {
@@ -273,7 +293,11 @@ int main(int argc, char const *argv[])
         int len;
         int f = open(argv[1], O_RDONLY);
         char *valasz = ReadPixels(f, &len);
+        signal(SIGALRM, WhatToDo);
+        signal(SIGINT, WhatToDo);
+        alarm(1);
         char *eredmeny = Unwrap(valasz, len);
+        alarm(0);
         //puts(eredmeny);
         int post = Post("GN6W3I", eredmeny, len);
         if (post == 0)
@@ -292,7 +316,7 @@ int main(int argc, char const *argv[])
             puts("");
             printf("\033[0m");
         }
-        
+
         free(eredmeny);
     }
     else
