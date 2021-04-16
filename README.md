@@ -80,4 +80,4 @@ Ha ezt az opciót szeretnénk használni egyszerűen mellé írjuk a program fut
 - **Hibakód 8**: Hibás a csomag elküldése ez esetben egy HTTP hibakód érkezett.
 - **Hibakód 9**: A szignál kezelés során hiba történt azaz a kódolás nem történt meg időben (ez esetben 1 másodperc).
 
-#### RKP.h tartalma:
+## RKP.h tartalma:
