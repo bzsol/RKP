@@ -2,7 +2,7 @@
 
 ###### Készítette: Berecz Zsolt - GN6W3I
 
-#### Feladat leírása:
+#### Program leírása:
 
 > Hozzunk létre egy olyan Linux alatt futó programot ami egy TrueColor bmp fájlban beágyazott szöveget kicsomagol és elküld egy HTTP POST segítségével egy megadott webszerverre.
 
@@ -27,7 +27,15 @@ A program futtatása terminál segítségével történik ha még nem fordított
 
 `$ gcc program.c -o program`
 
-Lefordítás után kapunk egy **program** nevezetű futtatható állományt.
+Több magos futattás esetén szükséges egy kapcsoló OpenMP inicializálása
+
+`$ gcc program.c -o program -fopenmp`
+
+`-o` kapcsoló esetén a nevét adjuk meg a futattható állománynak.
+
+`-fopenmp` kapcsoló esetén bővítjük a programot a gcc OpenMP implementációjával.
+
+Lefordítás után kapunk egy **.program** nevezetű futtatható állományt.
 Ezt követően a következő parancsot írjuk be:
 
 `$ ./program`
@@ -49,6 +57,8 @@ Ha ezt az opciót szeretnénk használni egyszerűen mellé írjuk a program fut
 <br>
 `$ ./program cpu.bmp`
 
+**Fontos: A program nem zár be Ctrl+C kombináció esetén mellé ha időtúllépés lépne fel a program bezár.**
+
 ### Program által visszaadott hibakódok:
 
 - **Hibakód: 0**: Ez esetben a program tökéletesen lefutott és egy zöld szöveg segítségével tájékoztat hogy sikeresen megtörtént a kapcsolat a szerverrel és a képből a kód hibátlanul ki lett kódolva.
@@ -68,3 +78,6 @@ Ha ezt az opciót szeretnénk használni egyszerűen mellé írjuk a program fut
 - **Hibakód 7**: A visszaérkező válasz szöveg nem érkezett meg és emiatt hibás a csomag küldés
   
 - **Hibakód 8**: Hibás a csomag elküldése ez esetben egy HTTP hibakód érkezett.
+- **Hibakód 9**: A szignál kezelés során hiba történt azaz a kódolás nem történt meg időben (ez esetben 1 másodperc).
+
+#### RKP.h tartalma:
