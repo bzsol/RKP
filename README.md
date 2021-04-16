@@ -78,6 +78,39 @@ Ha ezt az opciót szeretnénk használni egyszerűen mellé írjuk a program fut
 - **Hibakód 7**: A visszaérkező válasz szöveg nem érkezett meg és emiatt hibás a csomag küldés
   
 - **Hibakód 8**: Hibás a csomag elküldése ez esetben egy HTTP hibakód érkezett.
-- **Hibakód 9**: A szignál kezelés során hiba történt azaz a kódolás nem történt meg időben (ez esetben 1 másodperc).
+- **Hibakód 9**: A szignál kezelés során hiba történt azaz a kódolás nem történt meg időben 
+(ez esetben 1 másodperc).
 
 ## RKP.h tartalma:
+<br>
+<b>mallocFail</b><br>
+Ha memóriafoglalás probléma történik akkor ez az eljárás hívódik meg, gyors hibakezelés.
+<br>
+<br>
+<b>ReadPixels</b><br>
+Ez a függvény azért felel hogy egyrészt megnézi hogy az adott file BMP képfájl ezek után ha ez sikeres,a BMP fej állományban nem használt területen található karakterszámot kiolvasva nem mellé a kezdő pixelt ahol kezdődnek a kép pixelek és beolvassuk a pixeleket egy memóriaterületre.
+<i>Paraméterek:</i>
+
+<br>
+<br>
+<b>BrowseForOpen</b><br>
+Ez a függvény azért felel hogy a felhasználó számára egy könnyen kezelhető file keresőt tudjon használni, mappa esetén belelép ha fájlt,akkor pedig igyekszik megnyitni.
+
+(Csak is BMP képfájlt tud kezelni).
+<i>Paraméterek:</i>
+
+<b>Unwrap</b>
+Ebben a függvényben a megkapott memóriaterület ahol a titkosított pixelek találhatóak és ezzel a metódussal ki tudjuk kódolni a titkosított szöveget és vissza tudjuk adni egy olyan memóriaterületre ahol a kikódolt szöveg található.
+<i>Paraméterek:</i>
+
+<b>Post</b>
+Egy HTTP POST segítségével elküldjük kikódolt szövegünket, HTTP 200-as kód esetén egy üzenet elküldve üzenet fog érkezni, ellenkező esetben egy hiba üzenetet láthatunk.
+<i>Paraméterek:</i>
+
+<b>WhatToDo</b>
+Szignálkezelő ami azt szolgálja SIGINT és SIGALRM szignálokat elkapja.
+SIGINT esetén egy gyermek process-t ami nem engedélyezi a CTRL+C használatát.
+Időtúllépés esetén SIGALRM lép életbe és visszaküld egy hibaüzenetet.
+<i>Paraméterek:</i>
+
+
