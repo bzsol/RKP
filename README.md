@@ -80,6 +80,7 @@ Ha ezt az opciót szeretnénk használni egyszerűen mellé írjuk a program fut
 - **Hibakód 8**: Hibás a csomag elküldése ez esetben egy HTTP hibakód érkezett.
 - **Hibakód 9**: A szignál kezelés során hiba történt azaz a kódolás nem történt meg időben 
 (ez esetben 1 másodperc).
+- **Hibakód 10**: Ha több parancssori argumentumot adunk meg a programnak ezzel a hibával fogunk találkozni.
 
 ## RKP.h tartalma:
 <br>
@@ -89,28 +90,44 @@ Ha memóriafoglalás probléma történik akkor ez az eljárás hívódik meg, g
 <br>
 <b>ReadPixels</b><br>
 Ez a függvény azért felel hogy egyrészt megnézi hogy az adott file BMP képfájl ezek után ha ez sikeres,a BMP fej állományban nem használt területen található karakterszámot kiolvasva nem mellé a kezdő pixelt ahol kezdődnek a kép pixelek és beolvassuk a pixeleket egy memóriaterületre.
+
 <i>Paraméterek:</i>
+<br>
+Az f változó a megnyitott file bináris beolvasása után egy int bemeneti paraméter a *NumCh a titkos szöveg karakterszáma ez egy int pointer(mutató).
+Kimenet egy char* pixel tömb amiben a titkosított pixelek találhatóak. 
 
 <br>
 <br>
 <b>BrowseForOpen</b><br>
 Ez a függvény azért felel hogy a felhasználó számára egy könnyen kezelhető file keresőt tudjon használni, mappa esetén belelép ha fájlt,akkor pedig igyekszik megnyitni.
 
-(Csak is BMP képfájlt tud kezelni).
+(Csak is BMP képfájlt tud kezelni).<br>
 <i>Paraméterek:</i>
+<br>
+Nincs bemeneti paraméter ellenben a kimeneti paraméter egy int lesz ami a BMP file bináris olvasása(csak olvashat) után a ReadPixels függvény kap meg.
 
-<b>Unwrap</b>
-Ebben a függvényben a megkapott memóriaterület ahol a titkosított pixelek találhatóak és ezzel a metódussal ki tudjuk kódolni a titkosított szöveget és vissza tudjuk adni egy olyan memóriaterületre ahol a kikódolt szöveg található.
-<i>Paraméterek:</i>
+<b>Unwrap</b><br>
+Ebben a függvényben a megkapott memóriaterület ahol a titkosított pixelek találhatóak és ezzel a metódussal ki tudjuk kódolni a titkosított szöveget és vissza tudjuk adni egy olyan memóriaterületre ahol a kikódolt szöveg található.<br>
+<i>Paraméterek:</i><br>
+*Pbuff ami a lefoglalt pixelekre mutató pointer ez névlegesen a pixel lefoglalt memória terület. Egy NumCh ami a titkos szöveg karakterszáma.
+Kimenet pedig egy str azaz maga a titkos szöveg.
 
-<b>Post</b>
-Egy HTTP POST segítségével elküldjük kikódolt szövegünket, HTTP 200-as kód esetén egy üzenet elküldve üzenet fog érkezni, ellenkező esetben egy hiba üzenetet láthatunk.
-<i>Paraméterek:</i>
 
-<b>WhatToDo</b>
+<b>Post</b><br>
+Egy HTTP POST segítségével elküldjük kikódolt szövegünket, HTTP 200-as kód esetén egy üzenet elküldve üzenet fog érkezni, ellenkező esetben egy hiba üzenetet láthatunk.<br>
+<i>Paraméterek:</i><br>
+*NeptunID egy "string" ami a Neptun azonosítót tartalmazza hogy a webszerveren lásd hogy ténylegesen te külted el az üzenetet.<br>
+*message maga az üzenetre mutató memóriaterület.
+A NumCH pedig maga a titkos üzenet karakterszáma.
+Kimenetként két érték jöhet vissza. Ha minden rendben zajlott egy 0 érték tér vissza, ha pedig valami hiba történt és nem tudta rendesen elküldeni egy 8-as érték maga a hiba kódszáma. (Ebben a függvényben több hibakód is van de akkor maga a program is leáll.)
+
+
+
+<b>WhatToDo</b><br>
 Szignálkezelő ami azt szolgálja SIGINT és SIGALRM szignálokat elkapja.
 SIGINT esetén egy gyermek process-t ami nem engedélyezi a CTRL+C használatát.
-Időtúllépés esetén SIGALRM lép életbe és visszaküld egy hibaüzenetet.
-<i>Paraméterek:</i>
-
+Időtúllépés esetén SIGALRM lép életbe és visszaküld egy hibaüzenetet.<br>
+<i>Paraméterek:</i><br>
+Bementként egy sig integer változó érkezik. Ha ez a szignál ami érkezik maga az interruption szignál azaz a SIGINT nem engedi hogy leálljon a program. Ha az Unwrap függvény több mint egy másodperc alatt kódolja ki a pixeleket akkor a SIGALRM egy hibát fog kiírni és bezárja a programot.
+Ez egy eljárás nincs kimeneti érték.
 

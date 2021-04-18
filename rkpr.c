@@ -112,7 +112,8 @@ int main(int argc, char const *argv[])
     }
     else
     {
-        printf("Too many arguements!\nTry again!\n");
+        printf("Too many arguements!\n");
+        exit(10);
     }
     return 0;
 }
