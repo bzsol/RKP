@@ -87,7 +87,6 @@ Ha ezt az opciót szeretnénk használni egyszerűen mellé írjuk a program fut
 <b>mallocFail</b><br>
 Ha memóriafoglalás probléma történik akkor ez az eljárás hívódik meg, gyors hibakezelés.
 <br>
-<br>
 <b>ReadPixels</b><br>
 Ez a függvény azért felel hogy egyrészt megnézi hogy az adott file BMP képfájl ezek után ha ez sikeres,a BMP fej állományban nem használt területen található karakterszámot kiolvasva nem mellé a kezdő pixelt ahol kezdődnek a kép pixelek és beolvassuk a pixeleket egy memóriaterületre.
 
@@ -96,8 +95,6 @@ Ez a függvény azért felel hogy egyrészt megnézi hogy az adott file BMP kép
 Az f változó a megnyitott file bináris beolvasása után egy int bemeneti paraméter a *NumCh a titkos szöveg karakterszáma ez egy int pointer(mutató).
 Kimenet egy char* pixel tömb amiben a titkosított pixelek találhatóak. 
 
-<br>
-<br>
 <b>BrowseForOpen</b><br>
 Ez a függvény azért felel hogy a felhasználó számára egy könnyen kezelhető file keresőt tudjon használni, mappa esetén belelép ha fájlt,akkor pedig igyekszik megnyitni.
 
