@@ -31,9 +31,9 @@ Több magos futattás esetén szükséges egy kapcsoló OpenMP inicializálása
 
 `$ gcc program.c -o program -fopenmp`
 
-`-o` kapcsoló esetén a nevét adjuk meg a futattható állománynak.
+`-o` <br>kapcsoló esetén a nevét adjuk meg a futattható állománynak.
 
-`-fopenmp` kapcsoló esetén bővítjük a programot a gcc OpenMP implementációjával.
+`-fopenmp`<br> kapcsoló esetén bővítjük a programot a gcc OpenMP implementációjával.
 
 Lefordítás után kapunk egy **.program** nevezetű futtatható állományt.
 Ezt követően a következő parancsot írjuk be:
@@ -56,6 +56,16 @@ Ha direkt elérési útvonalat szeretnénk bátran használható ez az opció is
 Ha ezt az opciót szeretnénk használni egyszerűen mellé írjuk a program futtatása előtt a file nevét:
 <br>
 `$ ./program cpu.bmp`
+
+### További parancssori argumentumok:
+`$ ./program --help`
+<br>
+Ezzel az argumentummal megtudhatóak a program használatához szükséges tevékenységes és paraméterek.
+
+`$ ./program --version`
+<br>
+Ha ezt a parancssori argumentumot írjuk be megtekintehtő lesz a feladat készítője az elkészítés dátuma.
+
 
 **Fontos: A program nem zár be Ctrl+C kombináció esetén mellé ha időtúllépés lépne fel a program bezár.**
 
@@ -84,10 +94,10 @@ Ha ezt az opciót szeretnénk használni egyszerűen mellé írjuk a program fut
 
 ## RKP.h tartalma:
 <br>
-<b>mallocFail</b><br>
+<b>void mallocFail</b><br>
 Ha memóriafoglalás probléma történik akkor ez az eljárás hívódik meg, gyors hibakezelés.
 <br>
-<b>ReadPixels</b><br>
+<b>char* ReadPixels</b><br>
 Ez a függvény azért felel hogy egyrészt megnézi hogy az adott file BMP képfájl ezek után ha ez sikeres,a BMP fej állományban nem használt területen található karakterszámot kiolvasva nem mellé a kezdő pixelt ahol kezdődnek a kép pixelek és beolvassuk a pixeleket egy memóriaterületre.
 
 <i>Paraméterek:</i>
@@ -95,7 +105,7 @@ Ez a függvény azért felel hogy egyrészt megnézi hogy az adott file BMP kép
 Az f változó a megnyitott file bináris beolvasása után egy int bemeneti paraméter a *NumCh a titkos szöveg karakterszáma ez egy int pointer(mutató).
 Kimenet egy char* pixel tömb amiben a titkosított pixelek találhatóak. 
 
-<b>BrowseForOpen</b><br>
+<b>int BrowseForOpen</b><br>
 Ez a függvény azért felel hogy a felhasználó számára egy könnyen kezelhető file keresőt tudjon használni, mappa esetén belelép ha fájlt,akkor pedig igyekszik megnyitni.
 
 (Csak is BMP képfájlt tud kezelni).<br>
@@ -103,14 +113,14 @@ Ez a függvény azért felel hogy a felhasználó számára egy könnyen kezelhe
 <br>
 Nincs bemeneti paraméter ellenben a kimeneti paraméter egy int lesz ami a BMP file bináris olvasása(csak olvashat) után a ReadPixels függvény kap meg.
 
-<b>Unwrap</b><br>
+<b>char* Unwrap</b><br>
 Ebben a függvényben a megkapott memóriaterület ahol a titkosított pixelek találhatóak és ezzel a metódussal ki tudjuk kódolni a titkosított szöveget és vissza tudjuk adni egy olyan memóriaterületre ahol a kikódolt szöveg található.<br>
 <i>Paraméterek:</i><br>
 *Pbuff ami a lefoglalt pixelekre mutató pointer ez névlegesen a pixel lefoglalt memória terület. Egy NumCh ami a titkos szöveg karakterszáma.
 Kimenet pedig egy str azaz maga a titkos szöveg.
 
 
-<b>Post</b><br>
+<b>int Post</b><br>
 Egy HTTP POST segítségével elküldjük kikódolt szövegünket, HTTP 200-as kód esetén egy üzenet elküldve üzenet fog érkezni, ellenkező esetben egy hiba üzenetet láthatunk.<br>
 <i>Paraméterek:</i><br>
 *NeptunID egy "string" ami a Neptun azonosítót tartalmazza hogy a webszerveren lásd hogy ténylegesen te külted el az üzenetet.<br>
@@ -120,7 +130,7 @@ Kimenetként két érték jöhet vissza. Ha minden rendben zajlott egy 0 érték
 
 
 
-<b>WhatToDo</b><br>
+<b>void WhatToDo</b><br>
 Szignálkezelő ami azt szolgálja SIGINT és SIGALRM szignálokat elkapja.
 SIGINT esetén egy gyermek process-t ami nem engedélyezi a CTRL+C használatát.
 Időtúllépés esetén SIGALRM lép életbe és visszaküld egy hibaüzenetet.<br>

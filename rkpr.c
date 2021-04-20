@@ -39,7 +39,7 @@ int main(int argc, char const *argv[])
         printf("\033[0m");
         printf("Last update:\t");
         printf("\033[1;37m");
-        puts("2021.03.31");
+        puts("2021.04.19");
         printf("\033[0m");
         printf("Github link:\t");
         printf("\033[1;36m");

@@ -17,12 +17,28 @@
 #define TCP 80
 #define BUFFSIZE 1024
 
+/**
+ *  @function mallocFail
+ * 
+ *  Memórialefoglalás probléma/hiba esetén ez az eljárás hívódik meg
+ *  @exit 1 -> Memóriafoglalás meghiúsult
+ */
 void mallocFail()
 {
-    perror("The memory allocation is failed!");
+    fprintf(stderr,"Memory allocation failed!");
     exit(1);
 }
 
+/**
+ *  @function WhatToDo
+ * 
+ *  Szignál és Alarm kezelés
+ *  Ha a felhasználó a titkosított pixelek kikódolása közben ki akar lépni a CTRL+C kombinációt figyelmen kívül hagyva és figyelmeztetve a felhasználót.
+ *  Ha ez a kicsomagolás 1 sec-nál hosszabb volt akkor bezárja a programot.
+ *  @param sig[in] Ez a beérkező szignál értéke.
+ *  @exit 9 -> Túl sok ideig kódolt ki az Unwrap függvény
+ * 
+ */
 void WhatToDo(int sig)
 {
     if (sig == SIGINT)
@@ -41,10 +57,21 @@ void WhatToDo(int sig)
         exit(9);
     }
 }
+/**
+ *  @function Unwrap
+ *  
+ *  Titkosított pixelek visszafejtése szöveggé.
+ *  első pixel -> utolsó 2 érték 
+ *  második és harmadik pixel -> utolsó 3 érték
+ *  @param Pbuff[in] -> Pixel Buffer azaz a titkosított pixelekre mutató lefoglalt memóriaterület.
+ *  @param NumCh[out] -> Titkosított szöveg karakterszámának memóriacíme.
+ *  @return str -> Titkosított szöveg
+ *  @exit 1 -> Memóriafoglalás meghiúsult
+*/
 
 char *Unwrap(char *Pbuff, int NumCh)
 {
-    char *str = (char *)calloc(NumCh, sizeof(char));
+    char *str = (char *)calloc(NumCh+1, sizeof(char));
     if (str == NULL)
     {
         mallocFail();
@@ -74,9 +101,20 @@ char *Unwrap(char *Pbuff, int NumCh)
         str[i] = buffer;
     }
     free(Pbuff);
+    str[NumCh] = '\0'; // It is essential to close the string :) 
     return str;
 }
 
+/**
+ *   @function ReadPixels
+ *   
+ *   A binárisan beolvasott fájlt először ellenőrzi hogy ténylegesen BMP majd ezután beolvassa a titkosított pixeleket.
+ *   @param f[in] -> binárisan beolvasott file
+ *   @param NumCh[out] -> Titkosított szöveg karakterszámának memóriacíme.
+ *   @return pixel -> Titkosított pixelekre mutató memóriaterület
+ *   @exit 2 -> Az adott fájl nem BMP
+ *   @exit 1 -> Memóriafoglalás meghiúsult
+*/
 char *ReadPixels(int f, int *NumCh)
 {
     char *bm = (char *)calloc(2, sizeof(char));
@@ -84,7 +122,7 @@ char *ReadPixels(int f, int *NumCh)
     read(f, bm, 2);
     if (strcmp(bm, "BM") != 0)
     {
-        perror("This is not a valid BMP file!");
+        fprintf(stderr,"This is not a valid BMP file!");
         free(bm);
         exit(2);
     }
@@ -106,7 +144,14 @@ char *ReadPixels(int f, int *NumCh)
     close(f);
     return pixel;
 }
-
+/**
+ *  @function BrowseForOpen
+ *  Egy kezdetleges és primitív filekezelő felület a felhasználó részére
+ *  @return f -> Beolvasott bináris file
+ *  @exit 1 -> Memóriafoglalás meghiúsult
+ * 
+ * 
+ */
 int BrowseForOpen()
 {
     int f;
@@ -147,7 +192,9 @@ int BrowseForOpen()
         do
         {
             printf(">> ");
-            scanf("%s", input);
+            //scanf("%s", input); -> It is safer too use fgets()!!!! -> note that check first if NULL and after strlen()
+            fgets(input,sizeof(input),stdin);
+            (input != NULL && input[strlen(input)-1] == '\n') ? input[strlen(input)-1] = '\0' : fprintf(stderr,"You typed NULL or bad input!\n");
         } while (stat(input, &inode) != 0);
         printf("\n");
         if (inode.st_mode & S_IFDIR)
@@ -167,7 +214,23 @@ int BrowseForOpen()
     system("clear");
     return f;
 }
-
+/**
+ *  @function Post
+ *  Ez a függvény azért felel hogy a kikódolt üzenetet egy webszerverre küldi.
+ *  @param neptunID
+ *  @param message
+ *  @param NumCh
+ *  @exit 1 -> Memóriafoglalás meghiúsult
+ *  @exit 3 -> Az adott webszerver cím nem létezik
+ *  @exit 4 -> Socket létrehozása nem sikerült
+ *  @exit 5 -> A szerverrel való kapcsolat nem történt meg megfelelően
+ *  @exit 6 -> A HTTP POST csomag elküldésekor probléma történt
+ *  @exit 7 -> Visszaérkező csomag nem érkezett meg vagy valami hiba történt
+ *  @return 8 -> A kikódolt szöveg elküldése és visszaérkező üzenet nem egyezett meg a HTTP 200-as kóddal.
+ *  @return 0 -> Minden rendben történt az üzenet sikeresen megérkezett.
+ * 
+ * 
+ */
 int Post(char *neptunID, char *message, int NumCh)
 {
     int sock;
@@ -186,14 +249,14 @@ int Post(char *neptunID, char *message, int NumCh)
     hostinfo = gethostbyname(IP);
     if (hostinfo == NULL)
     {
-        perror("Error! The host is not found!");
+        fprintf(stderr,"Error! The host is not found!");
         exit(3);
     }
     sprintf(buffer, "POST /~vargai/post.php HTTP/1.1\r\nHost: irh.inf.unideb.hu\r\nContent-Length: %d\r\nContent-Type: application/x-www-form-urlencoded\r\n\r\nNeptunID=%s&PostedText=%s", NumCh + 6 + 9 + 12, neptunID, message);
     sock = socket(AF_INET, SOCK_STREAM, 0); // -> Make the socket
     if (sock < 0)
     {
-        perror("Error! Creating the socket is failed!");
+        fprintf(stderr,"Error! Creating the socket is failed!");
         exit(4);
     }
     address.sin_family = AF_INET;  // Ipv4
@@ -202,20 +265,20 @@ int Post(char *neptunID, char *message, int NumCh)
     con = connect(sock, (struct sockaddr *)&address, sizeof(address)); // Connect to the server
     if (con < 0)
     {
-        perror("Connection with the server is not established!");
+        fprintf(stderr,"Connection with the server is not established!");
         exit(5);
     }
     //write(sock, buffer, strlen(buffer)); -> küld a szerverre
     sent = send(sock, buffer, strlen(buffer), 0); // -> send() is ugyanaz
     if (sent <= 0)
     {
-        perror("Error with sending the package");
+        fprintf(stderr,"Error with sending the package");
         exit(6);
     }
     rec = recv(sock, buffer, BUFFSIZE, 0);
     if (rec <= 0)
     {
-        perror("Error with receiving the data!");
+        fprintf(stderr,"Error with receiving the data!");
         exit(7);
     }
     close(sock);

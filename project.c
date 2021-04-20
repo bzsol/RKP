@@ -146,7 +146,8 @@ int BrowseForOpen()
         do
         {
             printf(">> ");
-            scanf("%s", input);
+            //scanf("%s", input);
+            fgets(input,FILENAME_MAX,stdin);
         } while (stat(input, &inode) != 0);
         printf("\n");
         if (inode.st_mode & S_IFDIR)
