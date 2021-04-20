@@ -1,19 +1,35 @@
+#ifndef printf
 #include <stdio.h>
+#endif
+#ifndef free
 #include <stdlib.h>
+#endif
+#ifndef strcmp
 #include <string.h>
+#endif
 #include <unistd.h>
 #include <sys/stat.h>
+#ifndef open
 #include <fcntl.h>
-#include <time.h>
-#include <sys/types.h>
+#endif
 #include <dirent.h>
+#ifndef opendir
 #include <unistd.h>
+#endif
+#ifndef connect
 #include <sys/socket.h>
+#endif
+#ifndef gethostbyname
 #include <netdb.h>
-#include <arpa/inet.h>
+#endif
+#ifndef INADDR_ANY
 #include <netinet/in.h>
+#endif
+#include <arpa/inet.h>
 #include <omp.h>
+#ifndef signal
 #include <signal.h>
+#endif
 #define TCP 80
 #define BUFFSIZE 1024
 
@@ -192,9 +208,11 @@ int BrowseForOpen()
         do
         {
             printf(">> ");
-            //scanf("%s", input); -> It is safer too use fgets()!!!! -> note that check first if NULL and after strlen()
-            fgets(input,sizeof(input),stdin);
-            (input != NULL && input[strlen(input)-1] == '\n') ? input[strlen(input)-1] = '\0' : fprintf(stderr,"You typed NULL or bad input!\n");
+            scanf("%s", input);
+            /*fgets(input,sizeof(input),stdin);
+            if(input != NULL && input[strlen(input)-1] == '\n'){
+                input[strlen(input)-1] = '\0';
+            }*/ // It would be safer but buggy as hell!
         } while (stat(input, &inode) != 0);
         printf("\n");
         if (inode.st_mode & S_IFDIR)
@@ -228,7 +246,8 @@ int BrowseForOpen()
  *  @exit 7 -> Visszaérkező csomag nem érkezett meg vagy valami hiba történt
  *  @return 8 -> A kikódolt szöveg elküldése és visszaérkező üzenet nem egyezett meg a HTTP 200-as kóddal.
  *  @return 0 -> Minden rendben történt az üzenet sikeresen megérkezett.
- * 
+ *  @const -> TCP -> 80 port
+ *  @const -> BUFFER 1024
  * 
  */
 int Post(char *neptunID, char *message, int NumCh)
